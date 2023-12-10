@@ -36,7 +36,7 @@ export declare class AuthService {
     }>;
     login(loginDto: lognInDto): Promise<{
         user: User;
-        token: string;
+        token: string | any;
     }>;
     checkLogin(request: any): Promise<boolean>;
 }

@@ -51,7 +51,7 @@ export class AuthService {
     return { message: 'User successfully created' };
   }
 
-  async login(loginDto: lognInDto): Promise<{ user: User; token: string }> {
+  async login(loginDto: lognInDto): Promise<{ user: User; token: string|any }> {
     const validatedDto = plainToClass(lognInDto, loginDto);
 
     const validationErrors = await validate(validatedDto, {
@@ -81,7 +81,7 @@ export class AuthService {
       email: user.email,
       name: user.name,
     });
-    return { user, token };
+    return { user,token };
   }
 
   async checkLogin(@Req() request): Promise<boolean> {
@@ -93,8 +93,14 @@ export class AuthService {
     }
     try {
       const decoded = this.jwtService.verify(token);
-      request.user = decoded;
-      return true;
+      console.log(decoded);
+      
+      const user = await this.userModel.findOne({ _id: decoded.id });
+      if (user) {
+        return true;
+      } else {
+        return false;
+      }
     } catch (err) {
       return false;
     }
