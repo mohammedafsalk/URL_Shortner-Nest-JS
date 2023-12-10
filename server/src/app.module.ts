@@ -13,7 +13,5 @@ import { MongooseModule } from '@nestjs/mongoose';
     ConfigModule.forRoot({ envFilePath: '.env', isGlobal: true }),
     MongooseModule.forRoot(process.env.DB),
   ],
-  controllers: [],
-  providers: [UserService, AuthService],
 })
 export class AppModule {}

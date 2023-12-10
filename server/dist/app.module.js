@@ -8,8 +8,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
-const user_service_1 = require("./user/user.service");
-const auth_service_1 = require("./auth/auth.service");
 const user_module_1 = require("./user/user.module");
 const auth_module_1 = require("./auth/auth.module");
 const config_1 = require("@nestjs/config");
@@ -25,8 +23,6 @@ exports.AppModule = AppModule = __decorate([
             config_1.ConfigModule.forRoot({ envFilePath: '.env', isGlobal: true }),
             mongoose_1.MongooseModule.forRoot(process.env.DB),
         ],
-        controllers: [],
-        providers: [user_service_1.UserService, auth_service_1.AuthService],
     })
 ], AppModule);
 //# sourceMappingURL=app.module.js.map

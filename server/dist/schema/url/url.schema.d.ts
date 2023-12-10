@@ -23,8 +23,15 @@
 /// <reference types="mongoose/types/virtuals" />
 /// <reference types="mongoose/types/inferschematype" />
 import * as mongoose from 'mongoose';
-import { User } from 'src/schema/user/user.schema';
-export declare class AuthService {
-    private userModel;
-    constructor(userModel: mongoose.Model<User>);
+export declare class Url {
+    userId: mongoose.Types.ObjectId;
+    title: string;
+    shortUrl: string;
+    longUrl: string;
+    createdAt: Date;
 }
+export declare const UrlSchema: mongoose.Schema<Url, mongoose.Model<Url, any, any, any, mongoose.Document<unknown, any, Url> & Url & {
+    _id: mongoose.Types.ObjectId;
+}, any>, {}, {}, {}, {}, mongoose.DefaultSchemaOptions, Url, mongoose.Document<unknown, {}, mongoose.FlatRecord<Url>> & mongoose.FlatRecord<Url> & {
+    _id: mongoose.Types.ObjectId;
+}>;
