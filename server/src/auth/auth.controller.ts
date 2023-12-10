@@ -1,9 +1,34 @@
-import { Controller, Get } from '@nestjs/common';
+import { Body, Controller, Get, Post, Res } from '@nestjs/common';
+import { Response } from 'express';
 import { AuthService } from './auth.service';
+import { SignUpDto } from './dto/signup-dto';
+import { lognInDto } from './dto/login-dto';
 
 @Controller('auth')
 export class AuthController {
-    constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService) {}
 
-   
+  @Post('signup')
+  async signUp(@Body() signUpDto: SignUpDto, @Res() res: Response) {
+    try {
+      const result = await this.authService.signUp(signUpDto);
+      if (result) {
+        res.json({ success: true });
+      }
+    } catch (error) {
+      res.json({ success: false, error: error.message });
+    }
+  }
+
+  @Post('login')
+  async login(@Body() loginDto: lognInDto, @Res() res: Response) {
+    try {
+      const result = await this.authService.login(loginDto);
+      res
+        .cookie('token', result.token, { httpOnly: true })
+        .json({ success: true });
+    } catch (error) {
+      res.json({ success: false, error: error.message });
+    }
+  }
 }

@@ -1,5 +1,12 @@
+import { IsEmail, IsString } from 'class-validator';
+
 export class SignUpDto {
-    readonly username: string;
-    readonly email: string;
-    readonly password: string;
-  }
+  @IsString()
+  username: string;
+
+  @IsEmail({}, { message: 'Invalid email format' })
+  email: string;
+
+  @IsString()
+  password: string;
+}

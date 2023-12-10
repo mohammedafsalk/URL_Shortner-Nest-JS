@@ -17,15 +17,70 @@ const common_1 = require("@nestjs/common");
 const mongoose_1 = require("@nestjs/mongoose");
 const mongoose = require("mongoose");
 const user_schema_1 = require("../schema/user/user.schema");
+const signup_dto_1 = require("./dto/signup-dto");
+const bcrypt = require("bcrypt");
+const class_transformer_1 = require("class-transformer");
+const class_validator_1 = require("class-validator");
+const jwt_1 = require("@nestjs/jwt");
+const login_dto_1 = require("./dto/login-dto");
 let AuthService = class AuthService {
-    constructor(userModel) {
+    constructor(userModel, jwtService) {
         this.userModel = userModel;
+        this.jwtService = jwtService;
+    }
+    async signUp(signUpDto) {
+        const validatedDto = (0, class_transformer_1.plainToClass)(signup_dto_1.SignUpDto, signUpDto);
+        const validationErrors = await (0, class_validator_1.validate)(validatedDto, {
+            skipMissingProperties: true,
+        });
+        const emailErrors = validationErrors.filter((error) => error.property === 'email');
+        if (emailErrors.length > 0) {
+            throw new common_1.BadRequestException(emailErrors[0].constraints);
+        }
+        const { username, email, password } = signUpDto;
+        const existingUser = await this.userModel.findOne({ email });
+        if (existingUser) {
+            throw new common_1.ConflictException('User with this email already exists');
+        }
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const newUser = new this.userModel({
+            username,
+            email,
+            password: hashedPassword,
+        });
+        await newUser.save();
+        return { message: 'User successfully created' };
+    }
+    async login(loginDto) {
+        const validatedDto = (0, class_transformer_1.plainToClass)(login_dto_1.lognInDto, loginDto);
+        const validationErrors = await (0, class_validator_1.validate)(validatedDto, {
+            skipMissingProperties: true,
+        });
+        const emailErrors = validationErrors.filter((error) => error.property === 'email');
+        if (emailErrors.length > 0) {
+            throw new common_1.BadRequestException(emailErrors[0].constraints);
+        }
+        const { email, password } = loginDto;
+        const user = await this.userModel.findOne({ email });
+        if (!user) {
+            throw new common_1.UnauthorizedException('Invalid credentials');
+        }
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+        if (!isPasswordValid) {
+            throw new common_1.UnauthorizedException('Invalid credentials');
+        }
+        const token = this.jwtService.sign({
+            id: user._id,
+            email: user.email,
+            name: user.name,
+        });
+        return { user, token };
     }
 };
 exports.AuthService = AuthService;
 exports.AuthService = AuthService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, mongoose_1.InjectModel)(user_schema_1.User.name)),
-    __metadata("design:paramtypes", [mongoose.Model])
+    __metadata("design:paramtypes", [mongoose.Model, jwt_1.JwtService])
 ], AuthService);
 //# sourceMappingURL=auth.service.js.map

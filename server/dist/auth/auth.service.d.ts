@@ -24,7 +24,18 @@
 /// <reference types="mongoose/types/inferschematype" />
 import * as mongoose from 'mongoose';
 import { User } from 'src/schema/user/user.schema';
+import { SignUpDto } from './dto/signup-dto';
+import { JwtService } from '@nestjs/jwt';
+import { lognInDto } from './dto/login-dto';
 export declare class AuthService {
     private userModel;
-    constructor(userModel: mongoose.Model<User>);
+    private jwtService;
+    constructor(userModel: mongoose.Model<User>, jwtService: JwtService);
+    signUp(signUpDto: SignUpDto): Promise<{
+        message: string;
+    }>;
+    login(loginDto: lognInDto): Promise<{
+        user: User;
+        token: string;
+    }>;
 }

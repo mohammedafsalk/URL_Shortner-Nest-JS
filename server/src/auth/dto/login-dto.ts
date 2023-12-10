@@ -1,4 +1,9 @@
+import { IsEmail, IsString, isString } from 'class-validator';
+
 export class lognInDto {
-    readonly email: string;
-    readonly password: string;
-  }
+  @IsEmail({}, { message: 'Invalid email format' })
+  email: string;
+
+  @IsString()
+  password: string;
+}
