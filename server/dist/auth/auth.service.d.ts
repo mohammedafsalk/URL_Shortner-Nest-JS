@@ -38,4 +38,5 @@ export declare class AuthService {
         user: User;
         token: string;
     }>;
+    checkLogin(request: any): Promise<boolean>;
 }

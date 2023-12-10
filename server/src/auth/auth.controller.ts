@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Res } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, Res } from '@nestjs/common';
 import { Response } from 'express';
 import { AuthService } from './auth.service';
 import { SignUpDto } from './dto/signup-dto';
@@ -27,6 +27,30 @@ export class AuthController {
       res
         .cookie('token', result.token, { httpOnly: true })
         .json({ success: true });
+    } catch (error) {
+      res.json({ success: false, error: error.message });
+    }
+  }
+
+  @Get('checkLogin')
+  async checkLogin(@Req() request, @Res() res: Response) {
+    try {
+      const result = await this.authService.checkLogin(request);
+      if (result) {
+        const user = request.user;
+        res.json({ success: true, user, loggedIn: true });
+      } else {
+        res.json({ success: true, loggedIn: false });
+      }
+    } catch (error) {
+      res.json({ success: false, error: error.message });
+    }
+  }
+
+  @Get('logout')
+  logout(@Res() res: Response) {
+    try {
+      res.clearCookie('token', { httpOnly: true }).json({ success: true });
     } catch (error) {
       res.json({ success: false, error: error.message });
     }

@@ -76,8 +76,29 @@ let AuthService = class AuthService {
         });
         return { user, token };
     }
+    async checkLogin(request) {
+        let loggedIn;
+        const token = request.cookies['token'];
+        if (!token) {
+            throw new common_1.ForbiddenException('Token is required');
+        }
+        try {
+            const decoded = this.jwtService.verify(token);
+            request.user = decoded;
+            return true;
+        }
+        catch (err) {
+            return false;
+        }
+    }
 };
 exports.AuthService = AuthService;
+__decorate([
+    __param(0, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], AuthService.prototype, "checkLogin", null);
 exports.AuthService = AuthService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, mongoose_1.InjectModel)(user_schema_1.User.name)),

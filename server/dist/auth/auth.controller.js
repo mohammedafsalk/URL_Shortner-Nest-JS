@@ -43,6 +43,29 @@ let AuthController = class AuthController {
             res.json({ success: false, error: error.message });
         }
     }
+    async checkLogin(request, res) {
+        try {
+            const result = await this.authService.checkLogin(request);
+            if (result) {
+                const user = request.user;
+                res.json({ success: true, user, loggedIn: true });
+            }
+            else {
+                res.json({ success: true, loggedIn: false });
+            }
+        }
+        catch (error) {
+            res.json({ success: false, error: error.message });
+        }
+    }
+    logout(res) {
+        try {
+            res.clearCookie('token', { httpOnly: true }).json({ success: true });
+        }
+        catch (error) {
+            res.json({ success: false, error: error.message });
+        }
+    }
 };
 exports.AuthController = AuthController;
 __decorate([
@@ -61,6 +84,21 @@ __decorate([
     __metadata("design:paramtypes", [login_dto_1.lognInDto, Object]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "login", null);
+__decorate([
+    (0, common_1.Get)('checkLogin'),
+    __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Res)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "checkLogin", null);
+__decorate([
+    (0, common_1.Get)('logout'),
+    __param(0, (0, common_1.Res)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], AuthController.prototype, "logout", null);
 exports.AuthController = AuthController = __decorate([
     (0, common_1.Controller)('auth'),
     __metadata("design:paramtypes", [auth_service_1.AuthService])

@@ -7,4 +7,6 @@ export declare class AuthController {
     constructor(authService: AuthService);
     signUp(signUpDto: SignUpDto, res: Response): Promise<void>;
     login(loginDto: lognInDto, res: Response): Promise<void>;
+    checkLogin(request: any, res: Response): Promise<void>;
+    logout(res: Response): void;
 }

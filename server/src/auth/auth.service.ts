@@ -1,7 +1,9 @@
 import {
   BadRequestException,
   ConflictException,
+  ForbiddenException,
   Injectable,
+  Req,
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
@@ -80,5 +82,21 @@ export class AuthService {
       name: user.name,
     });
     return { user, token };
+  }
+
+  async checkLogin(@Req() request): Promise<boolean> {
+    let loggedIn: boolean;
+    const token: string = request.cookies['token'];
+
+    if (!token) {
+      throw new ForbiddenException('Token is required');
+    }
+    try {
+      const decoded = this.jwtService.verify(token);
+      request.user = decoded;
+      return true;
+    } catch (err) {
+      return false;
+    }
   }
 }
