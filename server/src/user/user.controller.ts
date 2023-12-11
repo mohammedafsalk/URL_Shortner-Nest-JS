@@ -14,10 +14,11 @@ import { UrlDto } from 'src/auth/dto/url-dto';
 import { url } from 'inspector';
 
 @Controller('user')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard) //Used to authenticate and protect routes which require authorization
 export class UserController {
   constructor(private userService: UserService) {}
 
+  // Handle GET methods for getting users
   @Get('all')
   async getusers(@Res() res: Response): Promise<void> {
     try {
@@ -28,6 +29,7 @@ export class UserController {
     }
   }
 
+  // Handle POST methods for creating a new short url
   @Post('url')
   async urlSubmit(@Body() body: UrlDto, @Res() res: Response): Promise<void> {
     try {
@@ -38,6 +40,7 @@ export class UserController {
     }
   }
 
+  // Handle GET methods for getting all url created by the user
   @Get('allurls/:id')
   async viewUrls(
     @Param('id') userId: string,
@@ -55,6 +58,7 @@ export class UserController {
     }
   }
 
+  // Handle GET methods for redirecting users to original url
   @Get('redirect/:id')
   async getRedirect(
     @Param('id') urlId: string,

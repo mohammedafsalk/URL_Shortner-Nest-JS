@@ -19,10 +19,12 @@ let AppModule = class AppModule {
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
-        providers: [{
+        providers: [
+            {
                 provide: core_1.APP_FILTER,
                 useClass: unauthorized_exception_filter_1.AllExceptionsFilter,
-            },],
+            },
+        ],
         imports: [
             user_module_1.UserModule,
             auth_module_1.AuthModule,

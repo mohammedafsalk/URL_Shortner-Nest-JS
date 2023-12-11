@@ -8,10 +8,15 @@ import { JwtModule } from '@nestjs/jwt';
 @Module({
   providers: [AuthService],
   controllers: [AuthController],
-  imports:[ MongooseModule.forFeature([{ name: 'User', schema: UserSchema }]),
- JwtModule.register({
-      secret: 'your-secret-key', // Replace with your actual secret key
+  imports: [
+    // Import the MongooseModule to work with MongoDB and UserSchema
+    MongooseModule.forFeature([{ name: 'User', schema: UserSchema }]),
+
+    // Import the JwtModule for JWT authentication
+    JwtModule.register({
+      secret: 'your-secret-key',
       signOptions: { expiresIn: '1h' },
-    }),] 
+    }),
+  ],
 })
 export class AuthModule {}

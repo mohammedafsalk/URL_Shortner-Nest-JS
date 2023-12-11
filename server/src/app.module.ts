@@ -9,15 +9,17 @@ import { AllExceptionsFilter } from './filters/unauthorized-exception.filter';
 import { APP_FILTER } from '@nestjs/core';
 
 @Module({
-  providers:[ {
-    provide: APP_FILTER,
-    useClass: AllExceptionsFilter,
-  },],
+  providers: [
+    {
+      provide: APP_FILTER,
+      useClass: AllExceptionsFilter,
+    },
+  ], // Provide the global exception filter for handling all exceptions
   imports: [
     UserModule,
     AuthModule,
-    ConfigModule.forRoot({ envFilePath: '.env', isGlobal: true }),
-    MongooseModule.forRoot(process.env.DB),
+    ConfigModule.forRoot({ envFilePath: '.env', isGlobal: true }), // Configure the application with environment variables
+    MongooseModule.forRoot(process.env.DB), // Connect to the MongoDB database using Mongoose
   ],
 })
 export class AppModule {}

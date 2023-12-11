@@ -30,7 +30,7 @@ export default function Login() {
     if (data.success) {
       dispatch({ type: "refresh" });
     } else {
-      toast.error("Something went wrong");
+      toast.error(data.error);
     }
   }
 
