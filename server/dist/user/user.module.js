@@ -13,6 +13,7 @@ const user_service_1 = require("./user.service");
 const user_schema_1 = require("../schema/user/user.schema");
 const mongoose_1 = require("@nestjs/mongoose");
 const jwt_1 = require("@nestjs/jwt");
+const url_schema_1 = require("../schema/url/url.schema");
 let UserModule = class UserModule {
 };
 exports.UserModule = UserModule;
@@ -22,6 +23,7 @@ exports.UserModule = UserModule = __decorate([
         controllers: [user_controller_1.UserController],
         imports: [
             mongoose_1.MongooseModule.forFeature([{ name: 'User', schema: user_schema_1.UserSchema }]),
+            mongoose_1.MongooseModule.forFeature([{ name: 'Url', schema: url_schema_1.UrlSchema }]),
             jwt_1.JwtModule.register({
                 secret: 'your-secret-key',
                 signOptions: { expiresIn: '1h' },

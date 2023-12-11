@@ -17,9 +17,12 @@ const common_1 = require("@nestjs/common");
 const mongoose_1 = require("@nestjs/mongoose");
 const user_schema_1 = require("../schema/user/user.schema");
 const mongoose = require("mongoose");
+const uuid_1 = require("uuid");
+const url_schema_1 = require("../schema/url/url.schema");
 let UserService = class UserService {
-    constructor(userModel) {
+    constructor(userModel, urlModel) {
         this.userModel = userModel;
+        this.urlModel = urlModel;
     }
     async getusers() {
         try {
@@ -36,11 +39,46 @@ let UserService = class UserService {
             throw new common_1.InternalServerErrorException('Internal Server Error');
         }
     }
+    async createUrl(urldto) {
+        const { title, shortUrl, userId } = urldto;
+        const longUrl = `http://localhost:3000//${(0, uuid_1.v4)()}`;
+        const newUrl = new this.urlModel({ title, shortUrl, longUrl, userId });
+        try {
+            await newUrl.save();
+        }
+        catch (error) {
+            throw new common_1.NotFoundException('Failed to create');
+        }
+    }
+    async viewUrls(userId) {
+        try {
+            const urls = await this.urlModel
+                .find({ userId })
+                .sort({ _id: -1 })
+                .populate('userId')
+                .lean();
+            return urls;
+        }
+        catch (error) {
+            throw new common_1.NotFoundException('Failed to fetch data');
+        }
+    }
+    async getRedirect(urlId) {
+        try {
+            const longUrl = `http://localhost:3000//${urlId}`;
+            const redirectUrl = await this.urlModel.findOne({ longUrl });
+            return redirectUrl;
+        }
+        catch (error) {
+            throw new common_1.NotFoundException('Failed to fetch data');
+        }
+    }
 };
 exports.UserService = UserService;
 exports.UserService = UserService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, mongoose_1.InjectModel)(user_schema_1.User.name)),
-    __metadata("design:paramtypes", [mongoose.Model])
+    __param(1, (0, mongoose_1.InjectModel)(url_schema_1.Url.name)),
+    __metadata("design:paramtypes", [mongoose.Model, mongoose.Model])
 ], UserService);
 //# sourceMappingURL=user.service.js.map

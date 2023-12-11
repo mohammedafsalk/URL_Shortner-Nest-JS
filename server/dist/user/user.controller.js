@@ -16,6 +16,7 @@ exports.UserController = void 0;
 const common_1 = require("@nestjs/common");
 const user_service_1 = require("./user.service");
 const auth_guard_1 = require("../guards/auth.guard");
+const url_dto_1 = require("../auth/dto/url-dto");
 let UserController = class UserController {
     constructor(userService) {
         this.userService = userService;
@@ -29,6 +30,38 @@ let UserController = class UserController {
             res.json({ success: false, error: error });
         }
     }
+    async urlSubmit(body, res) {
+        try {
+            await this.userService.createUrl(body);
+            res.json({ success: true });
+        }
+        catch (err) {
+            res.json({ success: false });
+        }
+    }
+    async viewUrls(userId, res) {
+        try {
+            const urls = await this.userService.viewUrls(userId);
+            if (urls.length > 0) {
+                res.json({ success: true, urls });
+            }
+            else {
+                res.json({ success: true, message: 'No url added' });
+            }
+        }
+        catch (error) {
+            res.json({ success: false, error: error.message });
+        }
+    }
+    async getRedirect(urlId, res) {
+        try {
+            const url = await this.userService.getRedirect(urlId);
+            res.json({ success: true, url });
+        }
+        catch (error) {
+            res.json({ success: false, error: error.message });
+        }
+    }
 };
 exports.UserController = UserController;
 __decorate([
@@ -38,6 +71,30 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "getusers", null);
+__decorate([
+    (0, common_1.Post)('url'),
+    __param(0, (0, common_1.Body)()),
+    __param(1, (0, common_1.Res)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [url_dto_1.UrlDto, Object]),
+    __metadata("design:returntype", Promise)
+], UserController.prototype, "urlSubmit", null);
+__decorate([
+    (0, common_1.Get)('allurls/:id'),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Res)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:returntype", Promise)
+], UserController.prototype, "viewUrls", null);
+__decorate([
+    (0, common_1.Get)('redirect/:id'),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Res)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:returntype", Promise)
+], UserController.prototype, "getRedirect", null);
 exports.UserController = UserController = __decorate([
     (0, common_1.Controller)('user'),
     (0, common_1.UseGuards)(auth_guard_1.JwtAuthGuard),

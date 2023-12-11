@@ -84,7 +84,7 @@ let AuthService = class AuthService {
         }
         try {
             const decoded = this.jwtService.verify(token);
-            console.log(...oo_oo(`3296091889_96_6_96_26_4`, decoded));
+            console.log(...oo_oo(`1789337776_96_6_96_26_4`, decoded));
             const user = await this.userModel.findOne({ _id: decoded.id });
             if (user) {
                 return true;

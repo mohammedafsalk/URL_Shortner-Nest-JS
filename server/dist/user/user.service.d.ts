@@ -24,11 +24,17 @@
 /// <reference types="mongoose/types/inferschematype" />
 import { User } from 'src/schema/user/user.schema';
 import * as mongoose from 'mongoose';
+import { Url } from 'src/schema/url/url.schema';
+import { UrlDto } from 'src/auth/dto/url-dto';
 export declare class UserService {
     private userModel;
-    constructor(userModel: mongoose.Model<User>);
+    private urlModel;
+    constructor(userModel: mongoose.Model<User>, urlModel: mongoose.Model<Url>);
     getusers(): Promise<{
         users?: User[];
         message?: boolean | string;
     }>;
+    createUrl(urldto: UrlDto): Promise<void>;
+    viewUrls(userId: string): Promise<any>;
+    getRedirect(urlId: string): Promise<any>;
 }
