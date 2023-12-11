@@ -20,7 +20,7 @@ let JwtAuthGuard = class JwtAuthGuard {
         const request = context.switchToHttp().getRequest();
         const token = request.cookies['token'];
         if (!token) {
-            return false;
+            throw new common_1.UnauthorizedException('Access denied');
         }
         try {
             const decoded = this.jwtService.verify(token);
@@ -28,7 +28,7 @@ let JwtAuthGuard = class JwtAuthGuard {
             return true;
         }
         catch (err) {
-            return false;
+            throw new common_1.UnauthorizedException('Access denied');
         }
     }
 };

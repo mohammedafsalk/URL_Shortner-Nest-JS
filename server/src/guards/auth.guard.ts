@@ -1,7 +1,11 @@
-
-
-import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+import {
+  Injectable,
+  CanActivate,
+  ExecutionContext,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { Response } from 'express';
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
@@ -12,15 +16,14 @@ export class JwtAuthGuard implements CanActivate {
     const token = request.cookies['token'];
 
     if (!token) {
-      return false;
+      throw new UnauthorizedException('Access denied');
     }
-
     try {
       const decoded: any = this.jwtService.verify(token);
       request.user = decoded;
       return true;
     } catch (err) {
-      return false;
+      throw new UnauthorizedException('Access denied');
     }
   }
 }

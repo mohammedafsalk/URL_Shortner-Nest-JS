@@ -5,8 +5,14 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
+import { AllExceptionsFilter } from './filters/unauthorized-exception.filter';
+import { APP_FILTER } from '@nestjs/core';
 
 @Module({
+  providers:[ {
+    provide: APP_FILTER,
+    useClass: AllExceptionsFilter,
+  },],
   imports: [
     UserModule,
     AuthModule,
