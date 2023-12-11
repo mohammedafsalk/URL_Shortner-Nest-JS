@@ -51,7 +51,9 @@ export class AuthService {
     return { message: 'User successfully created' };
   }
 
-  async login(loginDto: lognInDto): Promise<{ user: User; token: string|any }> {
+  async login(
+    loginDto: lognInDto,
+  ): Promise<{ user: User; token: string | any }> {
     const validatedDto = plainToClass(lognInDto, loginDto);
 
     const validationErrors = await validate(validatedDto, {
@@ -76,30 +78,30 @@ export class AuthService {
     if (!isPasswordValid) {
       throw new UnauthorizedException('Invalid credentials');
     }
-    const token = this.jwtService.sign ({
+    const token = this.jwtService.sign({
       id: user._id,
       email: user.email,
       name: user.name,
     });
-    return { user,token };
+    return { user, token };
   }
 
-  async checkLogin(@Req() request): Promise<boolean> {
-    let loggedIn: boolean;
+  async checkLogin(@Req() request): Promise<any> {
     const token: string = request.cookies['token'];
 
     if (!token) {
-      throw new ForbiddenException('Token is required');
+      throw new ForbiddenException('Token is required')
     }
     try {
       const decoded = this.jwtService.verify(token);
-      console.log(decoded);
-      
-      const user = await this.userModel.findOne({ _id: decoded.id });
+      const user = await this.userModel
+        .findOne({ _id: decoded.id })
+        .select('-password');
+
       if (user) {
-        return true;
+        return user;
       } else {
-        return false;
+        return null;
       }
     } catch (err) {
       return false;

@@ -33,7 +33,7 @@ export class UserService {
 
   async createUrl(urldto: UrlDto): Promise<void> {
     const { title, shortUrl, userId } = urldto;
-    const longUrl = `http://localhost:3000//${uuidv4()}`;
+    const longUrl = `http://localhost:5173/${uuidv4()}`;
     const newUrl = new this.urlModel({ title, shortUrl, longUrl, userId });
     try {
       await newUrl.save();
@@ -57,7 +57,7 @@ export class UserService {
 
   async getRedirect(urlId: string): Promise<any> {
     try {
-      const longUrl = `http://localhost:3000//${urlId}`;    
+      const longUrl = `http://localhost:5173/${urlId}`;
       const redirectUrl = await this.urlModel.findOne({ longUrl });
       return redirectUrl;
     } catch (error) {

@@ -37,13 +37,12 @@ export class AuthController {
     try {
       const result = await this.authService.checkLogin(request);
       if (result) {
-        const user = request.user;
-        res.json({ success: true, user, loggedIn: true });
+        res.json({ success: true, user: result, loggedIn: true });
       } else {
         res.json({ success: true, loggedIn: false });
       }
     } catch (error) {
-      res.json({ success: false, error: error.message });
+      res.json({ success: false, loggedIn: false, user: null });
     }
   }
 

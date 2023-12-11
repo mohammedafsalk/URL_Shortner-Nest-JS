@@ -38,5 +38,5 @@ export declare class AuthService {
         user: User;
         token: string | any;
     }>;
-    checkLogin(request: any): Promise<boolean>;
+    checkLogin(request: any): Promise<any>;
 }
